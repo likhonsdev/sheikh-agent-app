@@ -1,0 +1,10 @@
+langchain
+langchain-google-genai
+langchain-community
+docker
+python-dotenv
+vncdotool
+Pillow
+fastapi
+uvicorn
+google-generativeai # For the vision model

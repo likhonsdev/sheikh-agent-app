@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  # The "Brain" of the operation
+  agent-service:
+    build: ./agent_app
+    container_name: agent_brain
+    env_file:
+      - .env
+    volumes:
+      # We still need this to run basic shell commands if needed
+      - /var/run/docker.sock:/var/run/docker.sock
+      # Mount screenshots folder
+      - ./screenshots:/app/screenshots
+    stdin_open: true
+    tty: true
+    depends_on:
+      - gui-sandbox
+
+  # The "Body": A full desktop environment the agent can control
+  gui-sandbox:
+    image: jiteshsojitra/docker-ubuntu-xfce-container
+    container_name: agent_gui_sandbox
+    ports:
+      # Map VNC port 5901 to the host so you can watch the agent
+      - "5901:5901"
+      # Map noVNC web client port 6901 to the host
+      - "6901:6901"
+    environment:
+      # Set a predictable password for our agent's VNC tool
+      - VNC_PW=agent123
+      # Set a reasonable resolution
+      - VNC_RESOLUTION=1280x720
